@@ -1,4 +1,4 @@
-cal.m——计算冲击响应的函数
+h_cal.m——计算冲击响应的函数
 	
 cal_data.m——合并了原来的generate_data.m
 
