@@ -7,7 +7,7 @@ M = 80; %MBS antenna number
 SBS_locations = zeros(N_SBS,3);
 Scatter_locations = zeros(N_Scatter,3);
 MS_locations = zeros(N_MS,3);
-K = 10^5;      % LOS factor, sqrt(K_Rician) = gamma/(1-gamma)
+K = 10;      % LOS factor, sqrt(K_Rician) = gamma/(1-gamma)
 
 frequency = 2.4e9;
 opt.frequency = frequency;
@@ -18,19 +18,19 @@ D = lamda*0.5;  % distance between antenna elements of MBS
 H_MBS = zeros(N_MS,M);  % channel impulse responses of MBS
 H_SBS = zeros(N_MS,N_SBS);  % channel impulse responses of SBS
 
-%% Generate SBS_location
+%% Generate scatterer location
 for i = 1:N_Scatter
     r_Scatter = 700*rand;
-    phi_Scatter = rand*2*pi;
+    phi_Scatter = rand*pi;
     Scatter_locations(i,1) = r_Scatter*cos(phi_Scatter);
     Scatter_locations(i,2) = r_Scatter*sin(phi_Scatter);
     Scatter_locations(i,3) = -20+40*rand;   
 end
 
-%% Generate scatter_locations
+%% Generate SBS locations
 for i = 1:N_SBS
     r_SBS = 500*rand;
-    phi_SBS = rand*2*pi;
+    phi_SBS = rand*pi;
     SBS_locations(i,1) = r_SBS*cos(phi_SBS);
     SBS_locations(i,2) = r_SBS*sin(phi_SBS);
     SBS_locations(i,3) = -15+30*rand;
