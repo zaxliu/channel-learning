@@ -158,6 +158,7 @@ while i < abs(length)                                      % while not finished
     d1 = d2;
     ls_failed = 0;                              % this line search did not fail
   else
+    fprintf('failed');
     X = X0; f1 = f0; df1 = df0;  % restore point from before failed line search
     if ls_failed | i > abs(length)          % line search failed twice in a row
       break;                             % or we ran out of time, so we give up

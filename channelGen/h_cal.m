@@ -34,5 +34,6 @@ end
 power_los_adjust = K/(K+1)*(power_los + power_nlos);
 power_nlos_adjust = 1/(K+1)*(power_los + power_nlos);
 h = sqrt(power_los_adjust)*h_los/sqrt(power_los) + sqrt(power_nlos_adjust)*h_nlos/sqrt(power_nlos);
+% h = h_los;    % return LOS component only
 end
 

@@ -1,10 +1,10 @@
 %% Neural Network based Indirect Channel Estimation
 %% Initialization
-clear ; close all; clc
+% clear ; close all; clc
 % Setup the parameters you will use for this exercise
-input_layer_size  = 80;     % Num of features
-hidden_layer_size = 30;     % 25 hidden units
-num_labels = 5;             % Num of SBS is 5
+input_layer_size  = 200;     % Num of features
+hidden_layer_size = 20;     % No. of hidden units
+num_labels = 5;             % No. of SBS
 
 %% Loading and Visualizing Data
 %  We start the exercise by first loading and visualizing the dataset. 
@@ -12,10 +12,18 @@ num_labels = 5;             % Num of SBS is 5
 %
 fprintf('Preprocessing and Loading Data ...\n')
 % Load Training Data
-[X,y] = Preprocessing('../channelGen/data_with_80antennas.mat');
+file = ['../channelGen/2D_data_with_200_antennas_fixed2_SBSs_10_scatterers.mat'];
+[X,y] = Preprocessing(file);
+load(file);
 m = size(X, 1);
-X_val = X(1:2:end,:); y_val = y(1:2:end,:);
-X_train = X(2:2:end,:); y_train = y(2:2:end,:);
+% random select training and validation sets
+[trainInd,valInd]=dividerand(m,0.5,0.5,0);  
+X_val = X(valInd,:); y_val = y(valInd,:);
+X_train = X(trainInd,:); y_train = y(trainInd,:);
+
+% % divide data into halves
+% X_val = X(1:end/2,:); y_val = y(1:end/2,:);
+% X_train = X(end/2+1:end,:); y_train = y(end/2+1:end,:);
 
 %% Initializing Pameters
 %  In this part of the exercise, you will be starting to implment a two
@@ -41,8 +49,8 @@ initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 %
 fprintf('\nTraining Neural Network... \n')
 
-options = optimset('MaxIter', 1000);
-lambda = 0.1;
+options = optimset('MaxIter', 500);
+lambda = 1;
 costFunction = @(p) nnCostFunction(p, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
@@ -68,7 +76,6 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 pred_train = predict(Theta1, Theta2, X_train);
 pred_val = predict(Theta1, Theta2, X_val);
-
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred_train == y_train)) * 100);
 fprintf('\nValidation Set Accuracy: %f\n', mean(double(pred_val == y_val)) * 100);
 
