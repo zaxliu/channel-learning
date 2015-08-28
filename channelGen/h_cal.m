@@ -15,7 +15,7 @@ function [ h ] = h_cal( tx_loc, rx_loc, scat_loc, opt)
 %% Initialization
 frequency = opt.frequency;
 K = opt.K;
-lamda = 3e8/frequency;
+lamda = opt.lamda;
 num_scat = size(scat_loc,1);
 %% Calculate LOS
 d0 = norm(tx_loc-rx_loc);                       % length of LOS path
