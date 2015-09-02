@@ -12,21 +12,24 @@ function [ h ] = h_cal( tx_loc, rx_loc, scat_loc, opt)
 %           opt.K: Rician factor, scalar, >0
 %   Output:
 %       h: complex channel responce
+%% V2.1
+%-Change
+%---
+
+
 %% Initialization
-frequency = opt.frequency;
 K = opt.K;
 lamda = opt.lamda;
 num_scat = size(scat_loc,1);
 %% Calculate LOS
 d0 = norm(tx_loc-rx_loc);                       % length of LOS path
-h_los = lamda/(4*pi*d0)*exp(1i*2*pi*d0/lamda);  % LOS channel responce
+h_los = lamda/(4*pi*d0)*exp(1i*2*pi*d0/lamda);  % LOS channel responce?
 power_los = (lamda/(4*pi*d0))^2;                % LOS power
 %% Calculate non-LOS
 h_nlos = 0;
 power_nlos = 0;
-for i = 1:num_scat
-% for each scatterer
-    d = norm(tx_loc- scat_loc(i,:)) + norm(scat_loc(i,:)-rx_loc); % length of non-LOS path
+for i = 1:num_scat      % for each scatterer
+    d = norm(tx_loc- scat_loc(i,:)) + norm(scat_loc(i,:)-rx_loc);      % length of non-LOS path
     h_nlos = h_nlos + lamda/(4*pi*d)*exp(1i*2*pi*d/lamda);        % accumulate nLOS path response
     power_nlos = power_nlos + (lamda/(4*pi*d))^2;                 % accumulate nLOS path power
 end
