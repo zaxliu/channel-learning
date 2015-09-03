@@ -1,19 +1,20 @@
 %%  calculate chanel response
 %   function    h_cal
 %   file save     .mat file
-%   time:      2015-09-02
-%% version:  V3.0
-%   rearrange code
+%   time:      2015-09-03
+%% version:  V3.1
 %-Change
-%---separate location generator and channel respond
+%---put different frequency in H_MBS
+%---output formatchange
 %-Todo in next version
-%---put different frequency in H_MBS~~
+%---try different sbs scatter and ms generate model
 
 %% Definition of parameters
 light_speed=299792458;
 central_frequency = 2150e6;      %China Unicom 3g  downlink 2150MHz 2100~2200MHz
 central_lamda = light_speed/central_frequency;
 N_frequency=11;
+frequency_sample = central_frequency + linspace(-50e6, 50e6, N_frequency);
 
 N_MBS = 10;%MBS antenna number, 
 N_SBS = 5; 
@@ -26,8 +27,8 @@ SBS_locations = zeros(N_SBS,3);
 Scatter_locations = zeros(N_Scatter,3);
 MS_locations = zeros(N_MS,3);
 
-H_MBS = zeros(N_MS,M);  % channel impulse responses of MBS
-H_SBS = zeros(N_MS,N_SBS);  % channel impulse responses of SBS
+H_MBS = zeros(N_MS,N_MBS,N_frequency);  % channel impulse responses of MBS
+H_SBS = zeros(N_MS,N_SBS,N_frequency);  % channel impulse responses of SBS
 
 %% generate locations
     % in a 700m radius circle(2d)
@@ -66,24 +67,26 @@ H_SBS = zeros(N_MS,N_SBS);  % channel impulse responses of SBS
     
 %% Calulate channel responses
 
-frequency_sample = central_frequency + linspace(-50e6, 50e6, N_frequency);
-for fre_this=frequency_sample          
-        opt.frequency = fre_this;
+
+for i_fre=1:N_frequency          
+        opt.frequency = frequency_sample(i_fre);
         opt.K = K;
-        opt.lamda = light_speed/fre_this;
+        opt.lamda = light_speed/frequency_sample(i_fre);
      
         %% Calulate channel responses from different MS
         for i_MS = 1:N_MS
             % calculate responses of MBS antennas
             for i_MBS = 1:N_MBS
-                [H_MBS(i_MS,i_MBS)] = h_cal(MS_locations(i_MS,:) , MBS_locations(i_MBS,:) , Scatter_locations,opt);
+                [H_MBS(i_MS,i_MBS,i_fre)] = h_cal(MS_locations(i_MS,:) , MBS_locations(i_MBS,:) , Scatter_locations,opt);
             end
             % calculate responses of SBS antennas
             for i_SBS = 1:N_SBS
-               [H_SBS(i_MS,i_SBS)] = h_cal(MS_locations(i_MS,:) , SBS_locations(i_SBS,:) , Scatter_locations,opt); 
+               [H_SBS(i_MS,i_SBS,i_fre)] = h_cal(MS_locations(i_MS,:) , SBS_locations(i_SBS,:) , Scatter_locations,opt); 
             end
         end
-        %% Figures 
+
+end
+%% Figures 
         % figure(1);
         % scatter3(Scatter_locations(:,1),Scatter_locations(:,2),Scatter_locations(:,3),'b.');
         % hold on;
@@ -99,9 +102,11 @@ for fre_this=frequency_sample
         % figure(3);
         % subplot(1,2,1);plot(abs(H_SBS(1,:)));title('amplitude');
         % subplot(1,2,2);plot(unwrap(angle(H_SBS(1,:))));title('phase');
-        %% Data saving
-        save(['2D_data_with_',num2str(fre_this/1e6),'MHz_'...
+%% Data saving
+        save(['2D_data_with_',num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'samples_'...
             ,num2str(N_MBS),'_antennas_fixed2_SBSs_',num2str(N_Scatter),'_scatterers.mat']...
-            ,'fre_this','N_Scatter','N_SBS','N_MS','SBS_locations','Scatter_locations','MS_locations','H_MBS','H_SBS');
-
-end
+            ,'N_Scatter','N_SBS','N_MS','SBS_locations','Scatter_locations','MS_locations','H_MBS','H_SBS');
+        
+        
+        
+        

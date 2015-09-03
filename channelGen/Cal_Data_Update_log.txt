@@ -1,3 +1,10 @@
+%% version:  V3.1
+%-Change
+%---put different frequency in H_MBS
+%---output formatchange
+%-Todo in next version
+%---try different sbs scatter and ms generate model
+
 %% version£º  V3.0
 %   rearrange code
 %-Change
