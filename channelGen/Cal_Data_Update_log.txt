@@ -1,3 +1,12 @@
+% V3.1.1
+%=============================================================
+% Changes:
+%  ©¸ Modified names of code sections
+%=============================================================
+% Todos:  
+%  ©À try different sbs scatter and ms generate model
+%  ©¸ modify output file naming, embed parameters to make it self-contained
+
 %% version:  V3.1
 %-Change
 %---put different frequency in H_MBS
@@ -11,4 +20,3 @@
 %---separate location generator and channel respond
 %-Todo in next version
 %---put different frequency in H_MBS~~
-
