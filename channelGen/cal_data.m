@@ -1,16 +1,16 @@
 %%  Calculate Simulation Input Data
 %   function calls: h_cal
 %   output:     .mat file
-%   time:      2015-09-15
-%% version:  V3.1.1 
+%   time:      2015-10-13
+%% version:  V3.1.2 
 %©°©¸©´©¼©¤©¦©À©È©Ð©Ø©à
 %=============================================================
 % Changes:
-%  ©¸ Modified names of code sections
+%  ©¸modify output file naming, embed parameters to make it self-contained
 %=============================================================
 % Todos:  
 %  ©À try different sbs scatter and ms generate model
-%  ©¸ modify output file naming, embed parameters to make it self-contained
+%  ©¸ further consider OFDM system
 
 %% Parameter Definition
 light_speed=299792458;
@@ -107,9 +107,12 @@ end
         % subplot(1,2,1);plot(abs(H_SBS(1,:)));title('amplitude');
         % subplot(1,2,2);plot(unwrap(angle(H_SBS(1,:))));title('phase');
 %% Data saving
-        save(['2D_data_with_',num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'samples_'...
-            ,num2str(N_MBS),'_antennas_fixed2_SBSs_',num2str(N_Scatter),'_scatterers.mat']...
-            ,'N_Scatter','N_SBS','N_MS','SBS_locations','Scatter_locations','MS_locations','H_MBS','H_SBS');
+        save(['2D_data_with_',num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'_samples_'...
+            ,num2str(N_MBS),'_antennas_fixed_',num2str(N_SBS),'_SBSs_'...
+            ,num2str(N_Scatter),'_scatterers_',num2str(N_MS),'_MSs.mat']...
+            ,'N_MBS','N_SBS','N_Scatter','N_MS'...
+            ,'MBS_locations','SBS_locations','Scatter_locations','MS_locations'...
+            ,'H_MBS','H_SBS');
         
         
         
