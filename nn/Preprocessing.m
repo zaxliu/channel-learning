@@ -1,5 +1,15 @@
 function [X,y] = Preprocessing(File)
 % Preprocess GSCM Simulated Channel Response
+%% version:  V3.0.0 
+%©°©¸©´©¼©¤©¦©À©È©Ð©Ø©à
+%=============================================================
+% Changes:
+%  ©¸reshape input 
+%=============================================================
+% Todos:  
+
+%File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_10_antennas_fixed_5_SBSs_10_scatterers_20_MSs.mat';
+
 load(File);  % Load from dataset
 
 %% Different feature generation methods
@@ -8,13 +18,14 @@ load(File);  % Load from dataset
 
 % X = [abs(F),angle(F)];
 
+
 % %  MS locations as input
 % X = [MS_locations(:,1)/max(abs(MS_locations(:,1))),MS_locations(:,2)/max(abs(MS_locations(:,2)))];
 
 F = fft(H_MBS,[],2);
 Temp = log(abs(F));
 cod = lloyds(Temp(:),20);
-q = reshape(quantiz(Temp(:),cod),2000,200);
+q = reshape(quantiz(Temp(:),cod),N_MS,N_MBS*N_frequency);
 X = q;
 X = (X-4.5)/4.5;
 
@@ -39,5 +50,6 @@ X = (X-4.5)/4.5;
 % end
 
 %% generate y
-[~,y] = max(abs(H_SBS),[],2);                  % Connect to the SBS with largest SNR
+H_SBSr=reshape(H_SBS,N_MS*N_frequency,N_SBS);
+[~,y] = max(abs(H_SBSr),[],2);                  % Connect to the SBS with largest SNR
 end

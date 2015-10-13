@@ -1,9 +1,18 @@
 %% Neural Network based Indirect Channel Estimation
+%% version:  V3.0.0 
+%©°©¸©´©¼©¤©¦©À©È©Ð©Ø©à
+%=============================================================
+% Changes:
+%  ©¸reform input & Parameter
+%=============================================================
+% Todos:  
+
+
 %% Initialization
 % clear ; close all; clc
 % Setup the parameters you will use for this exercise
-input_layer_size  = 200;     % Num of features
-hidden_layer_size = 20;     % No. of hidden units
+input_layer_size  = N_MBS*N_frequency;     % Num of features
+hidden_layer_size = 100;     % No. of hidden units
 num_labels = 5;             % No. of SBS
 
 %% Loading and Visualizing Data
@@ -12,9 +21,10 @@ num_labels = 5;             % No. of SBS
 %
 fprintf('Preprocessing and Loading Data ...\n')
 % Load Training Data
-file = ['../channelGen/2D_data_with_200_antennas_fixed2_SBSs_10_scatterers.mat'];
+
+file = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_5_SBSs_10_scatterers_20_MSs.mat';
 [X,y] = Preprocessing(file);
-load(file);
+%load(file);
 m = size(X, 1);
 % random select training and validation sets
 [trainInd,valInd]=dividerand(m,0.5,0.5,0);  
