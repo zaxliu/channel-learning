@@ -1,12 +1,13 @@
 %%  Calculate Simulation Input Data
 %   function calls: h_cal
 %   output:     .mat file
-%   time:      2015-10-13
-%% version:  V3.1.2 
+%   time:      2015-12-01
+%% version:  V3.1.3 
 %©°©¸©´©¼©¤©¦©À©È©Ð©Ø©à
 %=============================================================
 % Changes:
-%  ©¸modify output file naming, embed parameters to make it self-contained
+%  ©Àget figures of sbs scatter ms
+%  ©¸change sbs location&numbers
 %=============================================================
 % Todos:  
 %  ©À try different sbs scatter and ms generate model
@@ -17,10 +18,10 @@ light_speed=299792458;
 central_frequency = 2150e6;      %China Unicom 3g  downlink 2150MHz 2100~2200MHz
 N_frequency=11;
 
-N_MBS = 10;%MBS antenna number, 
-N_SBS = 5; 
+N_MBS = 20;%MBS antenna number, 
+N_SBS = 10; 
 N_Scatter = 10;        
-N_MS = 20;   
+N_MS = 2000;   
 
 K = 10;      % LOS factor, sqrt(K_Rician) = gamma/(1-gamma)
 %% Initialization
@@ -36,15 +37,16 @@ H_MBS = zeros(N_MS,N_MBS,N_frequency);  % channel impulse responses of MBS
 H_SBS = zeros(N_MS,N_SBS,N_frequency);  % channel impulse responses of SBS
 
 %% Generate Locations
-    % in a 700m radius circle(2d)
+% in a 700m radius circle(2d)
+    
     % GenerateMBS locations
-     %linear arrangement start lovcation 0,0,0 gap=lamda/2
+    %linear arrangement start lovcation 0,0,0 gap=lamda/2
     for i = 1:N_MBS
             MBS_locations(i,:) =  [(i)*central_lamda/2,0,0];
     end
     
     % Generate SBS locations
-    SBS_locations = [-200,500,0;200,500,0;-500,200,0;0,200,0;500,200,0];
+    SBS_locations = [-200,500,0; 200,500,0; -500,200,0; 0,200,0; 500,200,0;-200,-500,0; 200,-500,0; -500,-200,0; 0,-200,0; 500,-200,0];
     
     % Generate scatterer location 
     for i = 1:N_Scatter
@@ -57,7 +59,7 @@ H_SBS = zeros(N_MS,N_SBS,N_frequency);  % channel impulse responses of SBS
             end
         end
     end
-
+    
     % generate MS location
     for i_MS = 1:N_MS
             while(1)        
@@ -69,15 +71,22 @@ H_SBS = zeros(N_MS,N_SBS,N_frequency);  % channel impulse responses of SBS
                 end
             end
     end   
-    
-    
+ %% figure
+figure(1);
+axis square;
+rectangle('Position',[-700,-700,1400,1400],'Curvature',[1,1])
+hold on;
+plot(SBS_locations(:,1),SBS_locations(:,2),'*');
+plot(Scatter_locations(:,1),Scatter_locations(:,2),'+');
+plot(MS_locations(:,1),MS_locations(:,2),'o');
+legend('SBS','Scatter','MS');
 %% Calulate channel responses
 for i_fre=1:N_frequency          
         opt.frequency = frequency_sample(i_fre);
         opt.K = K;
         opt.lamda = light_speed/frequency_sample(i_fre);
      
-        %% Calulate channel responses from different MS
+        % Calulate channel responses from different MS
         for i_MS = 1:N_MS
             % calculate responses of MBS antennas
             for i_MBS = 1:N_MBS
@@ -91,26 +100,19 @@ for i_fre=1:N_frequency
 
 end
 %% Figures 
-        % figure(1);
-        % scatter3(Scatter_locations(:,1),Scatter_locations(:,2),Scatter_locations(:,3),'b.');
-        % hold on;
-        % scatter3(SBS_locations(:,1),SBS_locations(:,2),SBS_locations(:,3),'rs');
-        % hold on;
-        % plot3(MS_locations(:,1),MS_locations(:,2),MS_locations(:,3),'rv');
-        % plot3(0,0,0,'rs','MarkerFaceColor','r');
-        % hold off;
         % % show amplitudes and phases of H_MBS(1,:) and H_SBS(1,:)
-        % figure(2);
-        % subplot(1,2,1);plot(abs(H_MBS(1,:)));title('amplitude');
-        % subplot(1,2,2);plot(unwrap(angle(H_MBS(1,:))));title('phase');
-        % figure(3);
-        % subplot(1,2,1);plot(abs(H_SBS(1,:)));title('amplitude');
-        % subplot(1,2,2);plot(unwrap(angle(H_SBS(1,:))));title('phase');
+%         figure(2);
+%         subplot(1,2,1);plot(abs(H_MBS(1,:,1)));title('amplitude');
+%         subplot(1,2,2);plot(unwrap(angle(H_MBS(1,:,1))));title('phase');
+%         figure(3);
+%         subplot(1,2,1);plot(abs(H_SBS(1,:,1)));title('amplitude');
+%         subplot(1,2,2);plot(unwrap(angle(H_SBS(1,:,1))));title('phase');
 %% Data saving
-        save(['2D_data_with_',num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'_samples_'...
+        save(['2D_data_with_'...
+            ,num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'_samples_'...
             ,num2str(N_MBS),'_antennas_fixed_',num2str(N_SBS),'_SBSs_'...
             ,num2str(N_Scatter),'_scatterers_',num2str(N_MS),'_MSs.mat']...
-            ,'N_MBS','N_SBS','N_Scatter','N_MS'...
+            ,'N_frequency','N_MBS','N_SBS','N_Scatter','N_MS'...
             ,'MBS_locations','SBS_locations','Scatter_locations','MS_locations'...
             ,'H_MBS','H_SBS');
         

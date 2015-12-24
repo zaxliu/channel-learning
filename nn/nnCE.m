@@ -11,9 +11,12 @@
 %% Initialization
 % clear ; close all; clc
 % Setup the parameters you will use for this exercise
+N_MBS=20;
+N_frequency=11;
+N_MS=2000;
 input_layer_size  = N_MBS*N_frequency;     % Num of features
 hidden_layer_size = 100;     % No. of hidden units
-num_labels = 5;             % No. of SBS
+num_labels = 10;             % No. of SBS
 
 %% Loading and Visualizing Data
 %  We start the exercise by first loading and visualizing the dataset. 
@@ -22,7 +25,7 @@ num_labels = 5;             % No. of SBS
 fprintf('Preprocessing and Loading Data ...\n')
 % Load Training Data
 
-file = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_5_SBSs_10_scatterers_20_MSs.mat';
+file = ['../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_',num2str(N_MS),'_MSs.mat'];
 [X,y] = Preprocessing(file);
 %load(file);
 m = size(X, 1);

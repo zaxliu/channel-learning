@@ -8,7 +8,7 @@ function [X,y] = Preprocessing(File)
 %=============================================================
 % Todos:  
 
-%File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_10_antennas_fixed_5_SBSs_10_scatterers_20_MSs.mat';
+File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_2000_MSs.mat';
 
 load(File);  % Load from dataset
 
@@ -21,8 +21,12 @@ load(File);  % Load from dataset
 
 % %  MS locations as input
 % X = [MS_locations(:,1)/max(abs(MS_locations(:,1))),MS_locations(:,2)/max(abs(MS_locations(:,2)))];
-
-F = fft(H_MBS,[],2);
+%F = fft2(H_MBS);
+F = fft(H_MBS,[],2);%fre-anglef
+% for i=1:N_MS
+%     f1=reshape(F(i,:,:),N_MBS,N_frequency);
+%     F(i,:,:)=fft(f1,[],2);
+% end
 Temp = log(abs(F));
 cod = lloyds(Temp(:),20);
 q = reshape(quantiz(Temp(:),cod),N_MS,N_MBS*N_frequency);

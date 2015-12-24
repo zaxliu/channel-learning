@@ -1,0 +1,24 @@
+before fft2£»
+
+2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_2000_MSs
+
+Training Set Accuracy: 99.900000
+
+Validation Set Accuracy: 68.000000
+
+
+fft2 in single frequency
+Training Set Accuracy: 100.000000
+
+Validation Set Accuracy: 10.300000
+
+
+fft in frequency
+Training Set Accuracy: 100.000000
+
+Validation Set Accuracy: 43.300000
+
+fft in mbs
+Training Set Accuracy: 99.600000
+
+Validation Set Accuracy: 19.300000

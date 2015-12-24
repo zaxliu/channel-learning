@@ -1,3 +1,12 @@
+%% version:  V3.1.2 
+%=============================================================
+% Changes:
+%  ©¸modify output file naming, embed parameters to make it self-contained
+%=============================================================
+% Todos:  
+%  ©À try different sbs scatter and ms generate model
+%  ©¸ further consider OFDM system
+
 % V3.1.1
 %=============================================================
 % Changes:
