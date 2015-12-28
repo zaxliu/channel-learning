@@ -16,7 +16,9 @@ N_frequency=11;
 N_MS=2000;
 input_layer_size  = N_MBS*N_frequency;     % Num of features
 hidden_layer_size = 100;     % No. of hidden units
-num_labels = 10;             % No. of SBS
+num_labels = 5;             % No. of SBS
+options = optimset('MaxIter', 500);
+lambda = 1;
 
 %% Loading and Visualizing Data
 %  We start the exercise by first loading and visualizing the dataset. 
@@ -25,7 +27,7 @@ num_labels = 10;             % No. of SBS
 fprintf('Preprocessing and Loading Data ...\n')
 % Load Training Data
 
-file = ['../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_',num2str(N_MS),'_MSs.mat'];
+file = ['../channelGen/2D_data_in_halfcircle_with_2150+-50MHz_',num2str(N_frequency),'_samples_',num2str(N_MBS),'_antennas_fixed_',num2str(num_labels),'_SBSs_10_scatterers_',num2str(N_MS),'_MSs.mat'];
 [X,y] = Preprocessing(file);
 %load(file);
 m = size(X, 1);
@@ -61,9 +63,6 @@ initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 %  long as we provide them with the gradient computations.
 %
 fprintf('\nTraining Neural Network... \n')
-
-options = optimset('MaxIter', 500);
-lambda = 1;
 costFunction = @(p) nnCostFunction(p, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
@@ -90,6 +89,6 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 pred_train = predict(Theta1, Theta2, X_train);
 pred_val = predict(Theta1, Theta2, X_val);
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred_train == y_train)) * 100);
-fprintf('\nValidation Set Accuracy: %f\n', mean(double(pred_val == y_val)) * 100);
+fprintf('Validation Set Accuracy: %f\n', mean(double(pred_val == y_val)) * 100);
 
 
