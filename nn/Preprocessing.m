@@ -8,31 +8,49 @@ function [X,y] = Preprocessing(File)
 %=============================================================
 % Todos:  
 
-File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_2000_MSs.mat';
-
+% File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_2000_MSs.mat';
 load(File);  % Load from dataset
 
-%% Different feature generation methods
-% F = fft(H_MBS,[],2);
-% X = abs(F);
+%% Generate feature X
+% % ============ Domain conversion ==============
+% % Option 1: angular-domain responce
+% % Note: if H_MBS contain frequency domain responce, will give
+% % angular-domain responce at different freqencies.
+F = fft(H_MBS,[],2);
 
-% X = [abs(F),angle(F)];
-
-
-% %  MS locations as input
+% % Option 2: MS locations
 % X = [MS_locations(:,1)/max(abs(MS_locations(:,1))),MS_locations(:,2)/max(abs(MS_locations(:,2)))];
-%F = fft2(H_MBS);
-F = fft(H_MBS,[],2);%fre-anglef
+
+% % Option 3: angular-temporal-domain amplitude
+% % Method 3.1: manually do fft() twice
+% F = fft(H_MBS,[],2);%fre-anglef
 % for i=1:N_MS
 %     f1=reshape(F(i,:,:),N_MBS,N_frequency);
 %     F(i,:,:)=fft(f1,[],2);
 % end
-Temp = log(abs(F));
-cod = lloyds(Temp(:),20);
-q = reshape(quantiz(Temp(:),cod),N_MS,N_MBS*N_frequency);
-X = q;
-X = (X-4.5)/4.5;
+% Method 3.2: manually do fft() twice
+% F = fft(fft(H_MBS, [], 2), [], 3);
 
+% % =========== Extract real from complex scalar =============
+% X = abs(F);  % amplitude
+% X = [abs(F),angle(F)];  % amplitude/phase stack
+X = abs(F());  % single frequency
+
+% % =========== Continuous non-linear transformation ==========
+X = log(X);      % log(x)
+% X = log(1 + X);  % log(1+x)
+
+% % =========== Discrete non linear transformation ========
+codebook_size = 20;
+codebook = lloyds(X(:),codebook_size);
+X = reshape(quantiz(X(:), codebook), N_MS, N_MBS*N_frequency);
+
+% % ========== Standarization ===============
+center = (codebook_size-1)/2;
+X = (X-center) / center;
+
+% ==========================================
+% ========== Sketch code below ==============
 % % quantiz for MS_locations
 % N = 5;
 % [px,~] = lloyds(MS_locations(:,1),2^N);
