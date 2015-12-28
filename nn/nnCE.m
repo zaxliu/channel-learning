@@ -11,14 +11,14 @@
 %% Initialization
 % clear ; close all; clc
 % Setup the parameters you will use for this exercise
-N_MBS=20;
-N_frequency=11;
-N_MS=2000;
-input_layer_size  = N_MBS*N_frequency;     % Num of features
+N_MBS = 20;
+N_frequency = 11;
+N_MS = 2000;
+input_layer_size = N_MBS*N_frequency;     % Num of features
 hidden_layer_size = 100;     % No. of hidden units
 num_labels = 5;             % No. of SBS
 options = optimset('MaxIter', 500);
-lambda = 1;
+lambda = 4;
 
 %% Loading and Visualizing Data
 %  We start the exercise by first loading and visualizing the dataset. 
