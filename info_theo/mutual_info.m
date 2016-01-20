@@ -1,4 +1,5 @@
-load('2D_data_with_80_antennas_fixed2_SBSs_10_1_scatterers.mat');   % Load file
+% load('2D_data_with_80_antennas_fixed2_SBSs_10_1_scatterers.mat');   % Load file
+load('2D_data_in_halfcircle_with_2150+-50MHz_1_samples_20_antennas_fixed_5_SBSs_10_scatterers_2000_MSs.mat');
 m = 8;
 q = 10;
 H_MBS_q = zeros(2000,m);
@@ -36,4 +37,5 @@ for i = 1:q^m
             I = I+count_xy(i,j)*log(count_xy(i,j)/count_x(i)/count_y(j))/(q^(m+1));
         end
     end
+    disp(i);
 end
