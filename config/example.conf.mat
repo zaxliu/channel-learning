@@ -1,0 +1,39 @@
+# Created by Octave 4.0.0, Wed Feb 03 14:23:21 2016 CST <polo@polo-ThinkPad-T430s>
+# name: light_speed
+# type: scalar
+299792458
+
+
+# name: central_frequency
+# type: scalar
+2150000000
+
+
+# name: N_frequency
+# type: scalar
+1
+
+
+# name: N_MBS
+# type: scalar
+20
+
+
+# name: N_SBS
+# type: scalar
+5
+
+
+# name: N_Scatter
+# type: scalar
+10
+
+
+# name: N_MS
+# type: scalar
+5
+
+
+# name: K
+# type: scalar
+10

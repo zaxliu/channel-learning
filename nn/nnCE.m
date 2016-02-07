@@ -1,9 +1,9 @@
 %% Neural Network based Indirect Channel Estimation
-%% version:  V3.0.0 
-%©°©¸©´©¼©¤©¦©À©È©Ð©Ø©à
+%% version:  V3.0.0
+
 %=============================================================
 % Changes:
-%  ©¸reform input & Parameter
+%  reform input & Parameter
 %=============================================================
 % Todos:  
 
@@ -21,7 +21,7 @@ options = optimset('MaxIter', 500);
 lambda = 4;
 
 %% Loading and Visualizing Data
-%  We start the exercise by first loading and visualizing the dataset. 
+%  We start the exercise by first loading and visualizing the dataset.
 %  You will be working with a dataset that contains handwritten digits.
 %
 fprintf('Preprocessing and Loading Data ...\n')
@@ -32,7 +32,7 @@ file = ['../channelGen/2D_data_in_halfcircle_with_2150+-50MHz_',num2str(N_freque
 %load(file);
 m = size(X, 1);
 % random select training and validation sets
-[trainInd,valInd]=dividerand(m,0.5,0.5,0);  
+[trainInd,valInd]=dividerand(m,0.5,0.5,0);
 X_val = X(valInd,:); y_val = y(valInd,:);
 X_train = X(trainInd,:); y_train = y(trainInd,:);
 
@@ -47,16 +47,16 @@ X_train = X(trainInd,:); y_train = y(trainInd,:);
 %  (randInitializeWeights.m)
 
 fprintf('\nInitializing Neural Network Parameters ...\n')
-% 
+%
 initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
 initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
-% 
+%
 % Unroll parameters
 initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 
 
 %% Training NN
-%  You have now implemented all the code necessary to train a neural 
+%  You have now implemented all the code necessary to train a neural
 %  network. To train your neural network, we will now use "fmincg", which
 %  is a function which works similarly to "fminunc". Recall that these
 %  advanced optimizers are able to train our cost functions efficiently as
@@ -90,5 +90,3 @@ pred_train = predict(Theta1, Theta2, X_train);
 pred_val = predict(Theta1, Theta2, X_val);
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred_train == y_train)) * 100);
 fprintf('Validation Set Accuracy: %f\n', mean(double(pred_val == y_val)) * 100);
-
-

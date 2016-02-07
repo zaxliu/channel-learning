@@ -1,14 +1,10 @@
-function [X,y] = Preprocessing(File)
-% Preprocess GSCM Simulated Channel Response
-%% version:  V3.0.0
+load(config_file));
 
-%=============================================================
-% Changes:
-%  reshape input
-%=============================================================
-% Todos:
+File = strcat('../channelGen/data/2D_data_in_halfcircle_with_',
+    num2str(central_frequency/1e6),'+-50MHz_',num2str(N_frequency),'_samples_',
+    num2str(N_MBS),'_antennas_fixed_',num2str(N_SBS),'_SBSs_',
+    num2str(N_Scatter),'_scatterers_',num2str(N_MS),'_MSs.mat');
 
-% File = '../channelGen/2D_data_with_2150+-50MHz_11_samples_20_antennas_fixed_10_SBSs_10_scatterers_2000_MSs.mat';
 load(File);  % Load from dataset
 
 %% Generate feature X
@@ -49,29 +45,9 @@ X = reshape(quantiz(X(:), codebook), N_MS, N_MBS*N_frequency);
 center = (codebook_size-1)/2;
 X = (X-center) / center;
 
-% ==========================================
-% ========== Sketch code below ==============
-% % quantiz for MS_locations
-% N = 5;
-% [px,~] = lloyds(MS_locations(:,1),2^N);
-% [py,~] = lloyds(MS_locations(:,2),2^N);
-% index_x = quantiz(MS_locations(:,1),px);
-% index_y = quantiz(MS_locations(:,2),py);
-% sx = dec2bin(index_x,N);
-% sy = dec2bin(index_y,N);
-% X = zeros(size(MS_locations,1),2*N);
-% for i = 1:N
-%     X(:,i) = str2num(sx(:,i));
-%     X(:,i+N) = str2num(sy(:,i));
-% end
-    % 2*2^N length
-% X = zeros(size(MS_locations,1),2*(2^N));
-% for i = 1:size(MS_locations,1)
-%     X(i,index_x(i)+1)=1;
-%     X(i,index_y(i)+N+1)=1;
-% end
-
 %% generate y
 H_SBSr=reshape(H_SBS,N_MS*N_frequency,N_SBS);
 [~,y] = max(abs(H_SBSr),[],2);                  % Connect to the SBS with largest SNR
-end
+
+save -6 data/X_file.mat X;
+save -6 data/y_file.mat y;
